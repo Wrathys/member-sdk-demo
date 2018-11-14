@@ -20,6 +20,19 @@ dependencies {
      implementation 'com.github.Wrathys:member-sdk-demo'
 }
 ```
+Step 3. Add the intent filter for receive data from Member Demo on your application:
+```xml
+<application
+    ...
+    android:theme="@style/AppTheme">
+    ...
+    <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="@string/type_text" />
+    </intent-filter>
+    ...
+```
 ## Author
 
 Satayu, satayu132@gmail.com
