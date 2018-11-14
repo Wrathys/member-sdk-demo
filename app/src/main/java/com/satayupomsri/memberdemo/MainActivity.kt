@@ -3,7 +3,6 @@ package com.satayupomsri.memberdemo
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract.Directory.PACKAGE_NAME
 import android.widget.Toast
 import com.satayupomsri.membersdkdemo.SignOnButton
 import kotlinx.android.synthetic.main.activity_main.*

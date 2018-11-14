@@ -7,11 +7,11 @@
 
     <string name="type_text">text/plain</string>
     <string name="provider_package_name">com.satayupomsri.memberdemo</string>
-    <string name="provider_package_key">packageMember</string>
-    <string name="consumer_package_key">packageDestination</string>
+    <string name="provider_package_key">provider_package</string>
+    <string name="consumer_package_key">consumer_package</string>
     <string name="member_id_key">member_id</string>
     <string name="member_name_key">member_name</string>
-    <string name="member_status_sign_in_key">member_status_sign</string>
+    <string name="member_status_sign_in_key">member_status_sign_in</string>
     <string name="member_status_sign_in_success">member_status_success</string>
     <string name="member_status_sign_in_fail">member_status_fail</string>
 </resources>

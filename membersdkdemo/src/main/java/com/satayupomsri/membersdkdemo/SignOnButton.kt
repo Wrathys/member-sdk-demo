@@ -29,7 +29,6 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
 
     init {
         this.setStyle(context)
-        listenDataFromProvider()
     }
 
     private fun setStyle(context: Context) {
@@ -142,6 +141,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
 
     fun setOnSigninListener(listener: OnSignInListener) {
         this.onSignInListener = listener
+        listenDataFromProvider()
     }
 
     private fun onSigninListenerSuccess(id: String, name: String) {
