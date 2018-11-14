@@ -2,23 +2,16 @@ package com.satayupomsri.membersdkdemo
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
-import android.support.v4.app.FragmentManager
 import android.util.AttributeSet
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import com.satayupomsri.membersdkdemo.R.id.bt_sign_in_fail
-import com.satayupomsri.membersdkdemo.R.id.bt_sign_in_success
+import android.widget.*
 
 /**
  * Created by satayupomsri on 14/11/2018 AD.
@@ -36,6 +29,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
 
     init {
         this.setStyle(context)
+        listenDataFromProvider()
     }
 
     private fun setStyle(context: Context) {
@@ -67,16 +61,65 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     }
 
     override fun onClick(v: View) {
+        try {
+            signInWithApplication()
+        }
+        catch (e: Exception) {
+            signInWithWebView()
+        }
+    }
+
+    private fun signInWithApplication() {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(resources.getString(R.string.provider_package_key), resources.getString(R.string.provider_package_name))
+            putExtra(resources.getString(R.string.consumer_package_key), context.packageName)
+            type = resources.getString(R.string.type_text)
+        }
+        sendIntent.`package` = resources.getString(R.string.provider_package_name)
+        context.startActivity(sendIntent)
+       (context as Activity).finish()
+    }
+
+    private fun signInWithWebView() {
         val dialog = Dialog()
         val activity = context as Activity
-        dialog.show(this, activity.fragmentManager, "my_fragment")
+        dialog.show(this, activity.fragmentManager, "fragment")
+    }
+
+    private fun listenDataFromProvider() {
+        // Listen to provide the data that request by sdk sign in
+        val intent: Intent = (context as Activity).intent
+        when {
+            intent.action == Intent.ACTION_SEND -> {
+                if (intent.type == resources.getString(R.string.type_text)) {
+                    intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key))?.let {
+                        if (intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)) == resources.getString(R.string.member_status_sign_in_success)) {
+                            onSigninListenerSuccess(
+                                    intent.getStringExtra(resources.getString(R.string.member_id_key)),
+                                    intent.getStringExtra(resources.getString(R.string.member_name_key))
+                            )
+                        } else {
+                            onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
+                        }
+                    }
+                }
+            }
+            else -> {
+                if (intent.type == resources.getString(R.string.type_text)) {
+                    intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key))?.let {
+                        onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
+                    }
+                }
+            }
+        }
     }
 
     override fun onSuccess(id: String, name: String) {
         onSigninListenerSuccess(id, name)
     }
 
-    override fun onFail(status: Int) {
+    override fun onFail(status: String) {
         onSigninListenerFail(status)
     }
 
@@ -94,7 +137,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         /**
          * @param status status code response.
          */
-        fun onSignInFail(status: Int)
+        fun onSignInFail(status: String)
     }
 
     fun setOnSigninListener(listener: OnSignInListener) {
@@ -105,7 +148,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         this.onSignInListener!!.onSignInSuccess(id, name)
     }
 
-    private fun onSigninListenerFail(status: Int) {
+    private fun onSigninListenerFail(status: String) {
         this.onSignInListener!!.onSignInFail(status)
     }
 

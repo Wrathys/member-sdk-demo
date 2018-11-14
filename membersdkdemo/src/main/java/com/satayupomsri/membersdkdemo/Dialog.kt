@@ -37,7 +37,7 @@ class Dialog : DialogFragment(), View.OnClickListener {
                     this.dismiss()
                 }
                 bt_sign_in_fail -> {
-                    this.listener!!.onFail((Math.random() * 200 + 200).toInt())
+                    this.listener!!.onFail(resources.getString(R.string.member_status_sign_in_fail))
                     this.dismiss()
                 }
                 else -> {
@@ -62,6 +62,6 @@ class Dialog : DialogFragment(), View.OnClickListener {
         /**
          * @param status status code response.
          */
-        fun onFail(status: Int)
+        fun onFail(status: String)
     }
 }
