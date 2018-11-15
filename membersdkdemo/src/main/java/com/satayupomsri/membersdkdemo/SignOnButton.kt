@@ -102,7 +102,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         val status: String
 
         // sign out may success or fail, random for demo
-        if(Math.random() > 0.9) {
+        if(Math.random() < 0.5) {
             status = resources.getString(R.string.member_status_sign_out_success)
             this.textView!!.text = resources.getString(R.string.mn_sign_in)
 

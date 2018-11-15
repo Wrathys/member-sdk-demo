@@ -40,14 +40,9 @@ class ListenerSignInSdk(context: Context) {
                 putExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.provider_package_key), activity.packageName)
                 putExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.member_id_key), id)
                 putExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.member_name_key), name)
-
-                // sign in may success or fail, random for demo
-                val status = if (Math.random() < 0.8)
-                    resources.getString(com.satayupomsri.membersdkdemo.R.string.member_status_sign_in_success)
-                else
-                    resources.getString(com.satayupomsri.membersdkdemo.R.string.member_status_sign_in_fail)
-                putExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.member_status_sign_in_key), status)
-
+                putExtra(
+                        resources.getString(com.satayupomsri.membersdkdemo.R.string.member_status_sign_in_key),
+                        resources.getString(com.satayupomsri.membersdkdemo.R.string.member_status_sign_in_success))
                 type = resources.getString(com.satayupomsri.membersdkdemo.R.string.type_text)
             }
 
