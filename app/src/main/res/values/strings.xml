@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Member Demo</string>
+
+    <string name="alert_no_activity_handle_intent">No Activity found to handle Intent</string>
+
+    <string name="bt_sign_in">Sign In</string>
+    <string name="bt_sign_out">Sign Out</string>
+    <string name="welcome_sign_in">Welcome %s</string>
+    <string name="tv_already_account">Already an Account</string>
+
+    <string name="et_sign_in_phone_or_email">Phone or Email</string>
+    <string name="et_sign_in_password">Password</string>
+    <string name="warning_invalid_sign_in">Invalid Phone, Email or Password</string>
 </resources>

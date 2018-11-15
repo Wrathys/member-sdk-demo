@@ -12,6 +12,9 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.content.pm.PackageManager
+import com.satayupomsri.membersdkdemo.utils.MemberData
+import com.satayupomsri.membersdkdemo.utils.Prefs
 
 /**
  * Created by satayupomsri on 14/11/2018 AD.
@@ -22,13 +25,15 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     private var imageView: ImageView? = null
     private var linearLayout: LinearLayout? = null
     private var onSignInListener: OnSignInListener? = null
+    private var prefs: Prefs? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        this.setStyle(context)
+        this.prefs = Prefs(this.context)
+        this.setStyle(this.context)
     }
 
     private fun setStyle(context: Context) {
@@ -47,7 +52,10 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         this.linearLayout!!.addView(this.imageView)
 
         this.textView = TextView(context)
-        this.textView!!.text = context.getString(R.string.mn_sign_in)
+        this.textView!!.text = if(prefs!!.memberData.isSignIn())
+            context.getString(R.string.mn_sign_in)
+        else
+            context.getString(R.string.mn_sign_out)
         this.textView!!.setTextColor(Color.parseColor("#ffffff"))
         this.textView!!.setTypeface(null, Typeface.BOLD)
         this.linearLayout!!.addView(this.textView)
@@ -60,30 +68,52 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     }
 
     override fun onClick(v: View) {
-        try {
-            signInWithApplication()
-        }
-        catch (e: Exception) {
-            signInWithWebView()
+        if(this.prefs!!.memberData.isSignIn()) {
+            this.signOut()
+        } else {
+            if(isApplicationInstalled(resources.getString(R.string.provider_package_name))){
+                this.signInWithApplication()
+            } else {
+                this.signInWithSdk()
+            }
         }
     }
 
     private fun signInWithApplication() {
+        val context2 = this.context
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(resources.getString(R.string.provider_package_key), resources.getString(R.string.provider_package_name))
-            putExtra(resources.getString(R.string.consumer_package_key), context.packageName)
+            putExtra(resources.getString(R.string.consumer_package_key), context2.packageName)
             type = resources.getString(R.string.type_text)
         }
         sendIntent.`package` = resources.getString(R.string.provider_package_name)
-        context.startActivity(sendIntent)
-       (context as Activity).finish()
+        this.context.startActivity(sendIntent)
+       (this.context as Activity).finish()
     }
 
-    private fun signInWithWebView() {
+    private fun signInWithSdk() {
         val dialog = Dialog()
-        val activity = context as Activity
+        val activity = this.context as Activity
         dialog.show(this, activity.fragmentManager, "fragment")
+    }
+
+    private fun signOut() {
+        val status: String
+
+        // sign out may success or fail, random for demo
+        if(Math.random() > 0.9) {
+            status = resources.getString(R.string.member_status_sign_out_success)
+            this.textView!!.text = resources.getString(R.string.mn_sign_in)
+
+            // clear session member data
+            this.prefs!!.memberData = MemberData("", "", false)
+        } else {
+            status = resources.getString(R.string.member_status_sign_out_fail)
+            this.textView!!.text = resources.getString(R.string.mn_sign_out)
+        }
+
+        this.onSignOutListener(status)
     }
 
     private fun listenDataFromProvider() {
@@ -115,11 +145,11 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     }
 
     override fun onSuccess(id: String, name: String) {
-        onSigninListenerSuccess(id, name)
+        this.onSigninListenerSuccess(id, name)
     }
 
     override fun onFail(status: String) {
-        onSigninListenerFail(status)
+        this.onSigninListenerFail(status)
     }
 
     /**
@@ -137,11 +167,16 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
          * @param status status code response.
          */
         fun onSignInFail(status: String)
+
+        /**
+         * @param status status code response.
+         */
+        fun onSignOut(status: String)
     }
 
     fun setOnSigninListener(listener: OnSignInListener) {
         this.onSignInListener = listener
-        listenDataFromProvider()
+        this.listenDataFromProvider()
     }
 
     private fun onSigninListenerSuccess(id: String, name: String) {
@@ -150,6 +185,10 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
 
     private fun onSigninListenerFail(status: String) {
         this.onSignInListener!!.onSignInFail(status)
+    }
+
+    private fun onSignOutListener(status: String) {
+        this.onSignInListener!!.onSignOut(status)
     }
 
     /**
@@ -161,6 +200,16 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         val dpMultiplier = metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT
 
         return dp * dpMultiplier
+    }
+
+    private fun isApplicationInstalled(uri: String): Boolean {
+        val pm = this.context.packageManager
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES)
+            return true
+        } catch (e: PackageManager.NameNotFoundException) {}
+
+        return false
     }
 
 }

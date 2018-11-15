@@ -2,6 +2,7 @@
     <string name="app_name">Member Sdk Demo</string>
 
     <string name="mn_sign_in">Sign in</string>
+    <string name="mn_sign_out">Sign out</string>
     <string name="mn_title">Sign in Demo</string>
 
 
@@ -11,7 +12,10 @@
     <string name="consumer_package_key">consumer_package</string>
     <string name="member_id_key">member_id</string>
     <string name="member_name_key">member_name</string>
+    <string name="member_is_sign_in_key">member_is_sign_in</string>
     <string name="member_status_sign_in_key">member_status_sign_in</string>
     <string name="member_status_sign_in_success">member_status_success</string>
     <string name="member_status_sign_in_fail">member_status_fail</string>
+    <string name="member_status_sign_out_success">member_status_sign_out_success</string>
+    <string name="member_status_sign_out_fail">member_status_sign_out_fail</string>
 </resources>

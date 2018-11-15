@@ -5,7 +5,7 @@
 ## Installation
 
 Step 1. Add the JitPack repository to your build file
-Add it in your root build.gradle at the end of repositories:
+Add it in your root build.gradle at the end of repositories
 ```gradle
 allprojects {
      repositories {
@@ -14,13 +14,13 @@ allprojects {
      }
 }
 ```
-Step 2. Add the dependency
+Step 2. Add the dependency and sync now
 ```gradle
 dependencies {
      implementation 'com.github.Wrathys:member-sdk-demo'
 }
 ```
-Step 3. Add the intent filter for receive data from Member Demo on your application:
+Step 3. Add the intent filter for receive data from Member Demo on your application
 ```xml
 <application
     ...

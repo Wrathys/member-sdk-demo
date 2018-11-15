@@ -31,8 +31,8 @@ class Dialog : DialogFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
             when (v?.id) {
                 bt_sign_in_success -> {
-                    val v1 = "D7feSa"
-                    val v2 = "SdkDemo"
+                    val v1 = "m00002"
+                    val v2 = "User2 General2"
                     this.listener!!.onSuccess(v1, v2)
                     this.dismiss()
                 }
