@@ -40,15 +40,15 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
 
         this.linearLayout = LinearLayout(context)
         this.linearLayout!!.setBackgroundResource(R.drawable.bt_signon)
-        this.linearLayout!!.layoutParams = ViewGroup.LayoutParams(dp(128), dp(54))
+        this.linearLayout!!.layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(54))
         this.linearLayout!!.gravity = Gravity.CENTER
         this.linearLayout!!.orientation = LinearLayout.HORIZONTAL
 
         this.imageView = ImageView(context)
         this.imageView!!.setImageResource(R.drawable.mn_logo)
-        val lp = FrameLayout.LayoutParams(dp(24), dp(24))
-        lp.setMargins(0, 0, dp(16), 0)
-        this.imageView!!.layoutParams = lp
+        val imageViewLayoutParams = FrameLayout.LayoutParams(dp(24), dp(24))
+        imageViewLayoutParams.setMargins(dp(8), 0, dp(16), 0)
+        this.imageView!!.layoutParams = imageViewLayoutParams
         this.linearLayout!!.addView(this.imageView)
 
         this.textView = TextView(context)
@@ -58,6 +58,9 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
             context.getString(R.string.mn_sign_in)
         this.textView!!.setTextColor(Color.parseColor("#ffffff"))
         this.textView!!.setTypeface(null, Typeface.BOLD)
+        val textViewLayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        textViewLayoutParams.setMargins(0, 0, dp(8), 0)
+        this.textView!!.layoutParams = textViewLayoutParams
         this.linearLayout!!.addView(this.textView)
 
         this.linearLayout!!.setOnClickListener(this)
