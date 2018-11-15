@@ -52,10 +52,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         this.linearLayout!!.addView(this.imageView)
 
         this.textView = TextView(context)
-        this.textView!!.text = if(prefs!!.memberData.isSignIn())
-            context.getString(R.string.mn_sign_out)
-        else
-            context.getString(R.string.mn_sign_in)
+        this.updateTextButton()
         this.textView!!.setTextColor(Color.parseColor("#ffffff"))
         this.textView!!.setTypeface(null, Typeface.BOLD)
         val textViewLayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -68,6 +65,13 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         this.addView(this.linearLayout)
         val layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
         this.layoutParams = layoutParams
+    }
+
+    private fun updateTextButton() {
+        this.textView!!.text = if(prefs!!.memberData.isSignIn())
+            context.getString(R.string.mn_sign_out)
+        else
+            context.getString(R.string.mn_sign_in)
     }
 
     override fun onClick(v: View) {
@@ -107,15 +111,14 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         // sign out may success or fail, random for demo
         if(Math.random() < 0.5) {
             status = resources.getString(R.string.member_status_sign_out_success)
-            this.textView!!.text = resources.getString(R.string.mn_sign_in)
 
             // clear session member data in app
             this.prefs!!.memberData = MemberData("", "", false)
         } else {
             status = resources.getString(R.string.member_status_sign_out_fail)
-            this.textView!!.text = resources.getString(R.string.mn_sign_out)
         }
 
+        this.updateTextButton()
         this.onSignOutListener(status)
     }
 
@@ -140,6 +143,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
                         } else {
                             onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
                         }
+                        this.updateTextButton()
                     }
                 }
             }
@@ -151,6 +155,10 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
                 }
             }
         }
+    }
+
+    private fun updateDataAndUi() {
+        this.listenDataFromProvider()
     }
 
     override fun onSuccess(id: String, name: String) {
@@ -185,7 +193,11 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
 
     fun setOnSigninListener(listener: OnSignInListener) {
         this.onSignInListener = listener
-        this.listenDataFromProvider()
+
+        /**
+         * 1. after sign in provider will send data back
+         */
+        this.updateDataAndUi()
     }
 
     private fun onSigninListenerSuccess(id: String, name: String) {
