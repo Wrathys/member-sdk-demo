@@ -53,9 +53,9 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
 
         this.textView = TextView(context)
         this.textView!!.text = if(prefs!!.memberData.isSignIn())
-            context.getString(R.string.mn_sign_in)
-        else
             context.getString(R.string.mn_sign_out)
+        else
+            context.getString(R.string.mn_sign_in)
         this.textView!!.setTextColor(Color.parseColor("#ffffff"))
         this.textView!!.setTypeface(null, Typeface.BOLD)
         this.linearLayout!!.addView(this.textView)
@@ -106,7 +106,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
             status = resources.getString(R.string.member_status_sign_out_success)
             this.textView!!.text = resources.getString(R.string.mn_sign_in)
 
-            // clear session member data
+            // clear session member data in app
             this.prefs!!.memberData = MemberData("", "", false)
         } else {
             status = resources.getString(R.string.member_status_sign_out_fail)
@@ -128,6 +128,12 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
                                     intent.getStringExtra(resources.getString(R.string.member_id_key)),
                                     intent.getStringExtra(resources.getString(R.string.member_name_key))
                             )
+
+                            // set session in app
+                            prefs!!.memberData = MemberData(
+                                    intent.getStringExtra(resources.getString(R.string.member_id_key)),
+                                    intent.getStringExtra(resources.getString(R.string.member_name_key)),
+                                    true)
                         } else {
                             onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
                         }
