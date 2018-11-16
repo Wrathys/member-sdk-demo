@@ -1,13 +1,19 @@
 package com.satayupomsri.membersdkdemo
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DialogFragment
 import android.app.FragmentManager
+import android.content.Context
+import android.graphics.Point
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.dialog.*
+import kotlinx.android.synthetic.main.dialog.view.*
 import java.net.URI
 
 /**
@@ -29,7 +35,7 @@ class Dialog : DialogFragment() {
         val view: View = activity.layoutInflater.inflate(R.layout.dialog, null)
         val alert = AlertDialog.Builder(activity)
 
-        this@Dialog.wv_sign_in.webViewClient = object : WebViewClient() {
+        view.wv_sign_in.webViewClient = object : WebViewClient() {
             override fun onLoadResource(view: WebView?, url: String?) {
                 super.onLoadResource(view, url)
 
@@ -40,7 +46,7 @@ class Dialog : DialogFragment() {
                 this@Dialog.onDone()
             }
         }
-        this@Dialog.wv_sign_in.loadUrl(BASE_URL)
+        view.wv_sign_in.loadUrl(BASE_URL)
 
 
         alert.setView(view)
@@ -52,7 +58,7 @@ class Dialog : DialogFragment() {
         id?.let {
             name?.let {
                 avatar?.let {
-                    if(isSignIn) {
+                    if (isSignIn) {
                         this@Dialog.isSignIn = false
                         this@Dialog.listener!!.onDone(id ?: "", name ?: "", avatar ?: "")
                         this@Dialog.dismiss()

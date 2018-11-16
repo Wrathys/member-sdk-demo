@@ -19,7 +19,7 @@
         android:textStyle="bold" />
 
 
-    <WebView
+    <com.satayupomsri.membersdkdemo.ResizeWebView
         android:id="@+id/wv_sign_in"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
