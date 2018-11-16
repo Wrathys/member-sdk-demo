@@ -113,7 +113,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
             status = resources.getString(R.string.member_status_sign_out_success)
 
             // clear session member data in app
-            this.prefs!!.memberData = MemberData("", "", false)
+            this.prefs!!.memberData = MemberData("", "", "",false)
         } else {
             status = resources.getString(R.string.member_status_sign_out_fail)
         }
@@ -132,13 +132,15 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
                         if (intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)) == resources.getString(R.string.member_status_sign_in_success)) {
                             onSigninListenerSuccess(
                                     intent.getStringExtra(resources.getString(R.string.member_id_key)),
-                                    intent.getStringExtra(resources.getString(R.string.member_name_key))
+                                    intent.getStringExtra(resources.getString(R.string.member_name_key)),
+                                    intent.getStringExtra(resources.getString(R.string.member_avatar_key))
                             )
 
                             // set session in app
                             prefs!!.memberData = MemberData(
                                     intent.getStringExtra(resources.getString(R.string.member_id_key)),
                                     intent.getStringExtra(resources.getString(R.string.member_name_key)),
+                                    intent.getStringExtra(resources.getString(R.string.member_avatar_key)),
                                     true)
                         } else {
                             onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
@@ -161,12 +163,8 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         this.listenDataFromProvider()
     }
 
-    override fun onSuccess(id: String, name: String) {
-        this.onSigninListenerSuccess(id, name)
-    }
-
-    override fun onFail(status: String) {
-        this.onSigninListenerFail(status)
+    override fun onDone(id: String, name: String, avatar: String) {
+        this.onSigninListenerSuccess(id, name, avatar)
     }
 
     /**
@@ -178,7 +176,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
          * @param id user id.
          * @param name user name.
          */
-        fun onSignInSuccess(id: String, name: String)
+        fun onSignInSuccess(id: String, name: String, avatar: String)
 
         /**
          * @param status status code response.
@@ -200,8 +198,8 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         this.updateDataAndUi()
     }
 
-    private fun onSigninListenerSuccess(id: String, name: String) {
-        this.onSignInListener!!.onSignInSuccess(id, name)
+    private fun onSigninListenerSuccess(id: String, name: String, avatar: String) {
+        this.onSignInListener!!.onSignInSuccess(id, name, avatar)
     }
 
     private fun onSigninListenerFail(status: String) {

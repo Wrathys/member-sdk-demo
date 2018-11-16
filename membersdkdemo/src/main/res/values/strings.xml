@@ -12,6 +12,7 @@
     <string name="consumer_package_key">consumer_package</string>
     <string name="member_id_key">member_id</string>
     <string name="member_name_key">member_name</string>
+    <string name="member_avatar_key">member_avatar</string>
     <string name="member_is_sign_in_key">member_is_sign_in</string>
     <string name="member_status_sign_in_key">member_status_sign_in</string>
     <string name="member_status_sign_in_success">member_status_success</string>

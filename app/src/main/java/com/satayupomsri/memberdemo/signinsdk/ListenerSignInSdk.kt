@@ -33,13 +33,14 @@ class ListenerSignInSdk(context: Context) {
         }
     }
 
-    fun provideData(consumerPackage: String, id: String, name: String) {
+    fun provideData(consumerPackage: String, id: String, name: String, avatar: String) {
         try {
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.provider_package_key), activity.packageName)
                 putExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.member_id_key), id)
                 putExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.member_name_key), name)
+                putExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.member_avatar_key), avatar)
                 putExtra(
                         resources.getString(com.satayupomsri.membersdkdemo.R.string.member_status_sign_in_key),
                         resources.getString(com.satayupomsri.membersdkdemo.R.string.member_status_sign_in_success))
@@ -60,8 +61,9 @@ class ListenerSignInSdk(context: Context) {
                 if(intent.getStringExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.provider_package_key)) == activity.packageName) {
                     val packageApp = intent.getStringExtra(resources.getString(com.satayupomsri.membersdkdemo.R.string.consumer_package_key))
                     if(prefs.memberData.isSignIn()) {
+                        val (id, name, avatar) = prefs.memberData.getMemberData()
                         //already sign in
-                        provideData(packageApp, prefs.memberData.getMemberData().id, prefs.memberData.getMemberData().name)
+                        provideData(packageApp, id, name, avatar)
                     } else {
                         //no member sign in
                         val sendIntent: Intent = Intent(activity, SignInActivity::class.java).apply {
