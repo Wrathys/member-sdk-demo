@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bt_sign_in_padding_left">12dp</dimen>
+    <dimen name="bt_sign_in_padding_right">16dp</dimen>
+    <dimen name="bt_sign_in_padding_center">8dp</dimen>
+    <dimen name="bt_sign_in_height">36dp</dimen>
+    <dimen name="bt_sign_in_size">18dp</dimen>
+    <dimen name="bt_sign_in_min_width">64dp</dimen>
+</resources>

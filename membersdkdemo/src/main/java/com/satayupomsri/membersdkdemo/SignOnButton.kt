@@ -3,11 +3,9 @@ package com.satayupomsri.membersdkdemo
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -21,9 +19,9 @@ import com.satayupomsri.membersdkdemo.utils.Prefs
  */
 class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
 
-    private var textView: TextView? = null
-    private var imageView: ImageView? = null
-    private var linearLayout: LinearLayout? = null
+    private lateinit var textView: TextView
+    private lateinit var imageView: ImageView
+    private lateinit var linearLayout: LinearLayout
     private var onSignInListener: OnSignInListener? = null
     private var prefs: Prefs? = null
 
@@ -39,28 +37,41 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     private fun setStyle(context: Context) {
 
         this.linearLayout = LinearLayout(context)
-        this.linearLayout!!.setBackgroundResource(R.drawable.bt_signon)
-        this.linearLayout!!.layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(54))
-        this.linearLayout!!.gravity = Gravity.CENTER
-        this.linearLayout!!.orientation = LinearLayout.HORIZONTAL
+        this.linearLayout.setBackgroundResource(R.drawable.bt_signon)
+        this.linearLayout.layoutParams = FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                resources.getDimension(R.dimen.bt_sign_in_height).toInt())
+        this.linearLayout.gravity = Gravity.CENTER
+        this.linearLayout.orientation = LinearLayout.HORIZONTAL
+        this.linearLayout.minimumWidth = resources.getDimension(R.dimen.bt_sign_in_min_width).toInt()
 
         this.imageView = ImageView(context)
-        this.imageView!!.setImageResource(R.drawable.mn_logo)
-        val imageViewLayoutParams = FrameLayout.LayoutParams(dp(24), dp(24))
-        imageViewLayoutParams.setMargins(dp(8), 0, dp(16), 0)
-        this.imageView!!.layoutParams = imageViewLayoutParams
-        this.linearLayout!!.addView(this.imageView)
+        this.imageView.setImageResource(R.drawable.mn_logo)
+        val imageViewLayoutParams = FrameLayout.LayoutParams(
+                resources.getDimension(R.dimen.bt_sign_in_size).toInt(),
+                resources.getDimension(R.dimen.bt_sign_in_size).toInt())
+        imageViewLayoutParams.setMargins(
+                resources.getDimension(R.dimen.bt_sign_in_padding_left).toInt(),
+                0,
+                resources.getDimension(R.dimen.bt_sign_in_padding_center).toInt(),
+                0)
+        this.imageView.layoutParams = imageViewLayoutParams
+        this.linearLayout.addView(this.imageView)
 
         this.textView = TextView(context)
         this.updateTextButton()
-        this.textView!!.setTextColor(Color.parseColor("#ffffff"))
-        this.textView!!.setTypeface(null, Typeface.BOLD)
+        this.textView.setTextColor(Color.parseColor("#ffffff"))
+        this.textView.setTypeface(null, Typeface.BOLD)
         val textViewLayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        textViewLayoutParams.setMargins(0, 0, dp(8), 0)
-        this.textView!!.layoutParams = textViewLayoutParams
-        this.linearLayout!!.addView(this.textView)
+        textViewLayoutParams.setMargins(
+                0,
+                0,
+                resources.getDimension(R.dimen.bt_sign_in_padding_right).toInt(),
+                0)
+        this.textView.layoutParams = textViewLayoutParams
+        this.linearLayout.addView(this.textView)
 
-        this.linearLayout!!.setOnClickListener(this)
+        this.linearLayout.setOnClickListener(this)
 
         this.addView(this.linearLayout)
         val layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
@@ -68,7 +79,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     }
 
     private fun updateTextButton() {
-        this.textView!!.text = if(prefs!!.memberData.isSignIn())
+        this.textView.text = if(prefs!!.memberData.isSignIn())
             context.getString(R.string.mn_sign_out)
         else
             context.getString(R.string.mn_sign_in)
@@ -210,17 +221,6 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         this.onSignInListener!!.onSignOut(status)
     }
 
-    /**
-     * @param dp number of design pixels.
-     * @return number of pixels corresponding to the desired design pixels.
-     */
-    private fun dp(dp: Int): Int {
-        val metrics = Resources.getSystem().getDisplayMetrics()
-        val dpMultiplier = metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT
-
-        return dp * dpMultiplier
-    }
-
     private fun isApplicationInstalled(uri: String): Boolean {
         val pm = this.context.packageManager
         try {
@@ -232,3 +232,5 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     }
 
 }
+
+private class TestCless

@@ -4,15 +4,15 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DialogFragment
 import android.app.FragmentManager
-import android.content.Context
 import android.graphics.Point
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.dialog.*
 import kotlinx.android.synthetic.main.dialog.view.*
 import java.net.URI
 
@@ -24,18 +24,30 @@ class Dialog : DialogFragment() {
     private var id: String? = null
     private var name: String? = null
     private var avatar: String? = null
-    private var isSignIn: Boolean = false
+    private var isUName: Boolean = false
+    private var isUPass: Boolean = false
     private var listener: OnListener? = null
+    private lateinit var container: View
 
     private companion object {
-        private val BASE_URL = "http://www.google.co.th"
+        private val BASE_URL = "https://www.google.co.th"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
-        val view: View = activity.layoutInflater.inflate(R.layout.dialog, null)
+        container = activity.layoutInflater.inflate(R.layout.dialog, null)
         val alert = AlertDialog.Builder(activity)
 
-        view.wv_sign_in.webViewClient = object : WebViewClient() {
+        //clear cookie about data sign in
+        CookieManager.getInstance().removeAllCookies {  }
+
+        val display = (context as Activity).windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+
+        //set init height
+        container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, size.y)
+
+        container.wv_sign_in.webViewClient = object : WebViewClient() {
             override fun onLoadResource(view: WebView?, url: String?) {
                 super.onLoadResource(view, url)
 
@@ -45,21 +57,33 @@ class Dialog : DialogFragment() {
 
                 this@Dialog.onDone()
             }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+
+                //set height follow webview
+                container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            }
         }
-        view.wv_sign_in.loadUrl(BASE_URL)
+        container.wv_sign_in.loadUrl(BASE_URL)
 
+        alert.setView(container)
 
-        alert.setView(view)
+        //set resize webview when keyboard show
+        val alertCreate = alert.create()
+        alertCreate.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        return alert.create()
+        return alertCreate
     }
 
     private fun onDone() {
         id?.let {
             name?.let {
                 avatar?.let {
-                    if (isSignIn) {
-                        this@Dialog.isSignIn = false
+                    if (isUName && isUPass) {
+                        this@Dialog.isUName = false
+                        this@Dialog.isUPass = false
+
                         this@Dialog.listener!!.onDone(id ?: "", name ?: "", avatar ?: "")
                         this@Dialog.dismiss()
                     }
@@ -75,9 +99,18 @@ class Dialog : DialogFragment() {
                 uri.host?.let {
                     if (uri.host == "accounts.google.com") {
                         uri.path?.let {
-                            if (uri.path == "/ServiceLogin") {
-                                this@Dialog.isSignIn = true
+                            if (uri.path == "/signin/v1/lookup") {
+                                this@Dialog.isUName = true
                             }
+                        }
+                        uri.path?.let {
+                            if (uri.path == "/signin/challenge/sl/password") {
+                                this@Dialog.isUPass = true
+                            }
+                        }
+                        if (url!!.matches("(\\S+)flowName=GlifWebSignIn+".toRegex())) {
+                            this@Dialog.isUName = false
+                            this@Dialog.isUPass = false
                         }
                     }
                 }
