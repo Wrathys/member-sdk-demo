@@ -8,31 +8,31 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
--keepclassmembers class fqcn.of.javascript.interface.for.webview {
-   public *;
-}
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
--keepattributes SourceFile,LineNumberTable
+#-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
--renamesourcefileattribute SourceFile
+#-renamesourcefileattribute SourceFile
 
 # Preserve all annotations.
-#-keepattributes *Annotation*
-#
-#-keep public class com.satayupomsri.membersdkdemo.SignOnButton {
-#       public constructor(android.content.Context);
-#       public constructor(android.content.Context, android.util.AttributeSet);
-#       public constructor(android.content.Context, android.util.AttributeSet, int);
-#}
-#
-#-keepclassmembernames public class com.satayupomsri.membersdkdemo.SignOnButton {
-#       public constructor(android.content.Context);
-#       public constructor(android.content.Context, android.util.AttributeSet);
-#       public constructor(android.content.Context, android.util.AttributeSet, int);
-#}
-#
-#-keep public interface com.satayupomsri.membersdkdemo.OnSignInListener
+-keepattributes *Annotation*
+
+-keep public class com.satayupomsri.membersdkdemo.SignOnButton {
+       public constructor(android.content.Context);
+       public constructor(android.content.Context, android.util.AttributeSet);
+       public constructor(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keepclassmembernames public class com.satayupomsri.membersdkdemo.SignOnButton {
+       public constructor(android.content.Context);
+       public constructor(android.content.Context, android.util.AttributeSet);
+       public constructor(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keep public interface com.satayupomsri.membersdkdemo.OnSignInListener
