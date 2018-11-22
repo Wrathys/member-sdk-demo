@@ -197,7 +197,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         fun onSignOut(status: String)
     }
 
-    fun setOnSigninListener(listener: OnSignInListener) {
+    fun setOnSignInListener(listener: OnSignInListener) {
         this.onSignInListener = listener
 
         /**
