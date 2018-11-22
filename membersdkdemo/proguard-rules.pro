@@ -23,6 +23,10 @@
 # Preserve all annotations.
 -keepattributes *Annotation*
 
--keep public class com.satayupomsri.membersdkdemo.SignOnButton
+-keep public class com.satayupomsri.membersdkdemo.SignOnButton {
+       public <init>(android.content.Context);
+       public <init>(android.content.Context, android.util.AttributeSet);
+       public <init>(android.content.Context, android.util.AttributeSet, int);
+}
 
 -keep public interface com.satayupomsri.membersdkdemo.OnSignInListener
