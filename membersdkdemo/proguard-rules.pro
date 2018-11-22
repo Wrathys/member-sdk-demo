@@ -20,6 +20,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-#
--keep class com.satayupomsri.membersdkdemo.utils {public *;}
--keep class com.satayupomsri.membersdkdemo.Dialog {private *;}
+# Preserve all annotations.
+-keepattributes *Annotation*
+
+#test allow only public method
+-keep class com.satayupomsri.membersdkdemo.SignOnButton {
+    public <methods>;
+}
