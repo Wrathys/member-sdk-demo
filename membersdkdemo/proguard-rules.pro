@@ -19,14 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
-# Preserve all annotations.
--keepattributes *Annotation*
-
--keep public class com.satayupomsri.membersdkdemo.SignOnButton {
-       public <init>(android.content.Context);
-       public <init>(android.content.Context, android.util.AttributeSet);
-       public <init>(android.content.Context, android.util.AttributeSet, int);
-}
-
--keep public interface com.satayupomsri.membersdkdemo.OnSignInListener
