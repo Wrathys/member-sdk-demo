@@ -25,5 +25,8 @@
 
 #test allow only public method
 -keep class com.satayupomsri.membersdkdemo.SignOnButton {
-    private <methods>;
+    public *;
+}
+-keep class com.satayupomsri.membersdkdemo.OnListener {
+    public *;
 }

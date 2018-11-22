@@ -22,7 +22,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     private lateinit var textView: TextView
     private lateinit var imageView: ImageView
     private lateinit var linearLayout: LinearLayout
-    private var onSignInListener: OnSignInListener? = null
+    private var onSignInListener: OnSignListener? = null
     private var prefs: Prefs? = null
 
     constructor(context: Context) : this(context, null)
@@ -173,35 +173,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         this.onSignInListenerSuccess(id, name, avatar)
     }
 
-    /**
-     * Listener On Sign in
-     */
-    interface OnSignInListener {
-
-        /**
-         * Callback when sing in success
-         *
-         * @param id user id.
-         * @param name user name.
-         */
-        fun onSignInSuccess(id: String, name: String, avatar: String)
-
-        /**
-         * Callback when sing in fail
-         *
-         * @param status status code response.
-         */
-        fun onSignInFail(status: String)
-
-        /**
-         * Callback when sing out
-         *
-         * @param status status code response.
-         */
-        fun onSignOut(status: String)
-    }
-
-    fun setOnSigninListener(listener: OnSignInListener) {
+    fun setOnSigninListener(listener: OnSignListener) {
         this.onSignInListener = listener
 
         /**
