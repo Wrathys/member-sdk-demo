@@ -141,37 +141,32 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
                 if (intent.type == resources.getString(R.string.type_text)) {
                     intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key))?.let {
                         if (intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)) == resources.getString(R.string.member_status_sign_in_success)) {
-                            onSigninListenerSuccess(
+                            this.onSigninListenerSuccess(
                                     intent.getStringExtra(resources.getString(R.string.member_id_key)),
                                     intent.getStringExtra(resources.getString(R.string.member_name_key)),
                                     intent.getStringExtra(resources.getString(R.string.member_avatar_key))
                             )
 
                             // set session in app
-                            prefs!!.memberData = MemberData(
+                            this.prefs!!.memberData = MemberData(
                                     intent.getStringExtra(resources.getString(R.string.member_id_key)),
                                     intent.getStringExtra(resources.getString(R.string.member_name_key)),
                                     intent.getStringExtra(resources.getString(R.string.member_avatar_key)),
                                     true)
                         } else {
-                            onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
+                            this.onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
                         }
-                        this.updateTextButton()
                     }
                 }
             }
             else -> {
                 if (intent.type == resources.getString(R.string.type_text)) {
                     intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key))?.let {
-                        onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
+                        this.onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
                     }
                 }
             }
         }
-    }
-
-    private fun updateDataAndUi() {
-        this.listenDataFromProvider()
     }
 
     override fun onDone(id: String, name: String, avatar: String) {
@@ -206,19 +201,25 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         /**
          * 1. after sign in provider will send data back
          */
-        this.updateDataAndUi()
+        this.listenDataFromProvider()
     }
 
     private fun onSigninListenerSuccess(id: String, name: String, avatar: String) {
         this.onSignInListener!!.onSignInSuccess(id, name, avatar)
+
+        this.updateTextButton()
     }
 
     private fun onSigninListenerFail(status: String) {
         this.onSignInListener!!.onSignInFail(status)
+
+        this.updateTextButton()
     }
 
     private fun onSignOutListener(status: String) {
         this.onSignInListener!!.onSignOut(status)
+
+        this.updateTextButton()
     }
 
     private fun isApplicationInstalled(uri: String): Boolean {
@@ -232,5 +233,3 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     }
 
 }
-
-private class TestCless
