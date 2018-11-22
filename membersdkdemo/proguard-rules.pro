@@ -27,4 +27,4 @@
 -keep class com.satayupomsri.membersdkdemo.SignOnButton {
     public;
 }
--keep public interface com.satayupomsri.membersdkdemo.OnSignInListene
+-keep interface com.satayupomsri.membrsdkdemo.SignInListener
