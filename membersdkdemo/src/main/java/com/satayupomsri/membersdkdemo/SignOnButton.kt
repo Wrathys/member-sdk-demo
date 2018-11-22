@@ -141,7 +141,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
                 if (intent.type == resources.getString(R.string.type_text)) {
                     intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key))?.let {
                         if (intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)) == resources.getString(R.string.member_status_sign_in_success)) {
-                            this.onSigninListenerSuccess(
+                            this.onSignInListenerSuccess(
                                     intent.getStringExtra(resources.getString(R.string.member_id_key)),
                                     intent.getStringExtra(resources.getString(R.string.member_name_key)),
                                     intent.getStringExtra(resources.getString(R.string.member_avatar_key))
@@ -154,7 +154,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
                                     intent.getStringExtra(resources.getString(R.string.member_avatar_key)),
                                     true)
                         } else {
-                            this.onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
+                            this.onSignInListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
                         }
                     }
                 }
@@ -162,7 +162,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
             else -> {
                 if (intent.type == resources.getString(R.string.type_text)) {
                     intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key))?.let {
-                        this.onSigninListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
+                        this.onSignInListenerFail(intent.getStringExtra(resources.getString(R.string.member_status_sign_in_key)))
                     }
                 }
             }
@@ -170,7 +170,7 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
     }
 
     override fun onDone(id: String, name: String, avatar: String) {
-        this.onSigninListenerSuccess(id, name, avatar)
+        this.onSignInListenerSuccess(id, name, avatar)
     }
 
     /**
@@ -210,13 +210,13 @@ class SignOnButton : FrameLayout, View.OnClickListener, Dialog.OnListener {
         this.listenDataFromProvider()
     }
 
-    private fun onSigninListenerSuccess(id: String, name: String, avatar: String) {
+    private fun onSignInListenerSuccess(id: String, name: String, avatar: String) {
         this.onSignInListener!!.onSignInSuccess(id, name, avatar)
 
         this.updateTextButton()
     }
 
-    private fun onSigninListenerFail(status: String) {
+    private fun onSignInListenerFail(status: String) {
         this.onSignInListener!!.onSignInFail(status)
 
         this.updateTextButton()
