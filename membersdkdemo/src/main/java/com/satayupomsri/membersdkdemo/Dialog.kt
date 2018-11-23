@@ -33,9 +33,15 @@ internal class Dialog : DialogFragment() {
         private val BASE_URL = "https://www.google.co.th"
     }
 
+    enum class KEY {
+        QWE, ASD, ZXC
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         container = activity.layoutInflater.inflate(R.layout.dialog, null)
         val alert = AlertDialog.Builder(activity)
+
+        val a = KEY.ASD
 
         //clear cookie about data sign in
         CookieManager.getInstance().removeAllCookies { }
