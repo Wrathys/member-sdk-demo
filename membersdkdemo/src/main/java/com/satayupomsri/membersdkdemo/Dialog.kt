@@ -29,9 +29,9 @@ class Dialog : DialogFragment() {
     private var listener: OnListener? = null
     private lateinit var container: View
 
-    private companion object {
-        private val BASE_URL = "https://www.google.co.th"
-    }
+//    private companion object {
+//        private val BASE_URL = "https://www.google.co.th"
+//    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         container = activity.layoutInflater.inflate(R.layout.dialog, null)
@@ -65,7 +65,7 @@ class Dialog : DialogFragment() {
                 container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             }
         }
-        container.wv_sign_in.loadUrl(BASE_URL)
+        container.wv_sign_in.loadUrl(getString(R.string.sign_in_api))
 
         alert.setView(container)
 
@@ -96,20 +96,20 @@ class Dialog : DialogFragment() {
         url?.let {
             val uri = URI.create(url)
             uri.scheme?.let {
-                if (uri.scheme.matches("^(http|https)".toRegex())) {
+                if (uri.scheme.matches(getString(R.string.sign_in_scheme).toRegex())) {
                     uri.host?.let {
-                        if (uri.host == "accounts.google.com") {
+                        if (uri.host == getString(R.string.sign_in_host_action)) {
                             uri.path?.let {
-                                if (uri.path == "/signin/v1/lookup") {
+                                if (uri.path == getString(R.string.sign_in_uname_action)) {
                                     this@Dialog.isUName = true
                                 }
                             }
                             uri.path?.let {
-                                if (uri.path == "/signin/challenge/sl/password") {
+                                if (uri.path == getString(R.string.sign_in_upass_action)) {
                                     this@Dialog.isUPass = true
                                 }
                             }
-                            if (url.matches("(\\S+)flowName=GlifWebSignIn+".toRegex())) {
+                            if (url.matches(getString(R.string.sign_in_back_action).toRegex())) {
                                 this@Dialog.isUName = false
                                 this@Dialog.isUPass = false
                             }
@@ -122,7 +122,7 @@ class Dialog : DialogFragment() {
 
     private fun getAvatar(url: String?) {
         url?.let {
-            if (url.matches("^(http|https)://lh3\\.googleusercontent\\.com/(\\S+)(/photo\\.jpg)\\b".toRegex())) {
+            if (url.matches(getString(R.string.sign_in_reg_avatar).toRegex())) {
                 this@Dialog.avatar = url
             }
         }
@@ -131,11 +131,11 @@ class Dialog : DialogFragment() {
     private fun getHash(url: String?) {
         val uri = URI.create(url)
         uri.scheme?.let {
-            if (uri.scheme.matches("^(http|https)".toRegex())) {
+            if (uri.scheme.matches(getString(R.string.sign_in_scheme).toRegex())) {
                 uri.host?.let {
-                    if (uri.host == "lh3.googleusercontent.com") {
+                    if (uri.host == getString(R.string.sign_in_host_hash)) {
                         uri.path?.let {
-                            val path = uri.path.split("/")
+                            val path = uri.path.split(getString(R.string.sign_in_split_path))
                             if (!path[1].isEmpty()) {
                                 this@Dialog.id = path[1]
                             }

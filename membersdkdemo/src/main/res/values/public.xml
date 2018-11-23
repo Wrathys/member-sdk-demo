@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <public name="type_text" type="string"/>
+
+    <public name="member_status_sign_in_success" type="string"/>
+    <public name="member_status_sign_in_fail" type="string"/>
+    <public name="member_status_sign_out_success" type="string"/>
+    <public name="member_status_sign_out_fail" type="string"/>
+</resources>
