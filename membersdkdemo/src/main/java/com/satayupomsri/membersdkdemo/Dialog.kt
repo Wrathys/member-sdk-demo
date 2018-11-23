@@ -65,7 +65,7 @@ internal class Dialog : DialogFragment() {
                 container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             }
         }
-        container.wv_sign_in.loadUrl(BASE_URL)
+        container.wv_sign_in.loadUrl(BuildConfig.SIGN_IN_API)
 
         alert.setView(container)
 
