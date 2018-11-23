@@ -7,7 +7,7 @@ import com.satayupomsri.membersdkdemo.R
 /**
  * Created by satayupomsri on 15/11/2018 AD.
  */
-class Prefs (context: Context) {
+internal class Prefs (context: Context) {
 
     private val prefName = "com.satayupomsri.membersdkdemo.utils.prefs"
     private val mContext = context

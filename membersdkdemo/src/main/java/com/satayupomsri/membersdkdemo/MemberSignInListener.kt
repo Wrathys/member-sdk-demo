@@ -6,7 +6,7 @@ package com.satayupomsri.membersdkdemo
 /**
  * Listener On Sign in
  */
-interface OnSignInListener {
+interface MemberSignInListener {
 
     /**
      * @param id user id.

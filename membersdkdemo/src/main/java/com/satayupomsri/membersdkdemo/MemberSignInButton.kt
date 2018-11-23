@@ -10,9 +10,9 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import android.content.pm.PackageManager
 import com.satayupomsri.membersdkdemo.utils.MemberData
 import com.satayupomsri.membersdkdemo.utils.Prefs
+import com.satayupomsri.membersdkdemo.utils.*
 
 /**
  * Created by satayupomsri on 14/11/2018 AD.
@@ -22,7 +22,7 @@ class MemberSignInButton : FrameLayout, View.OnClickListener, Dialog.OnListener 
     private lateinit var textView: TextView
     private lateinit var imageView: ImageView
     private lateinit var linearLayout: LinearLayout
-    private var onSignInListener: OnSignInListener? = null
+    private var onSignInListener: MemberSignInListener? = null
     private var prefs: Prefs = Prefs(this.context)
 
     constructor(context: Context) : this(context, null)
@@ -89,7 +89,7 @@ class MemberSignInButton : FrameLayout, View.OnClickListener, Dialog.OnListener 
         if (this.prefs.memberData.isSignIn()) {
             this.signOut()
         } else {
-            if (isApplicationInstalled(resources.getString(R.string.provider_package_name))) {
+            if (isApplicationInstalled(this.context, resources.getString(R.string.provider_package_name))) {
                 this.signInWithApplication()
             } else {
                 this.signInWithSdk()
@@ -170,7 +170,7 @@ class MemberSignInButton : FrameLayout, View.OnClickListener, Dialog.OnListener 
         this.onSignInListenerSuccess(id, name, avatar)
     }
 
-    fun setOnSignInListener(listener: OnSignInListener) {
+    fun setOnSignInListener(listener: MemberSignInListener) {
         this.onSignInListener = listener
 
         /**
@@ -194,17 +194,6 @@ class MemberSignInButton : FrameLayout, View.OnClickListener, Dialog.OnListener 
 
         if (status == resources.getString(R.string.member_status_sign_out_success))
             this.updateMemberDataAndButton("", "", "", false)
-    }
-
-    private fun isApplicationInstalled(uri: String): Boolean {
-        val pm = this.context.packageManager
-        try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES)
-            return true
-        } catch (e: PackageManager.NameNotFoundException) {
-        }
-
-        return false
     }
 
 }

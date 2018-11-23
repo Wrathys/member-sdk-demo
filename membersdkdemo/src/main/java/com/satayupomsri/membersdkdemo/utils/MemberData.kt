@@ -3,7 +3,7 @@ package com.satayupomsri.membersdkdemo.utils
 /**
  * Created by satayupomsri on 15/11/2018 AD.
  */
-data class MemberData(
+internal data class MemberData(
         private val id: String,
         private val name: String,
         private val avatar: String,

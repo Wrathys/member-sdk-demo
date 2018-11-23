@@ -19,7 +19,7 @@ import java.net.URI
 /**
  * Created by satayupomsri on 14/11/2018 AD.
  */
-class Dialog : DialogFragment() {
+internal class Dialog : DialogFragment() {
 
     private var id: String? = null
     private var name: String? = null
