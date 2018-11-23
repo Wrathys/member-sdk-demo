@@ -38,7 +38,7 @@ class Dialog : DialogFragment() {
         val alert = AlertDialog.Builder(activity)
 
         //clear cookie about data sign in
-        CookieManager.getInstance().removeAllCookies {  }
+        CookieManager.getInstance().removeAllCookies { }
 
         val display = (context as Activity).windowManager.defaultDisplay
         val size = Point()
@@ -84,7 +84,7 @@ class Dialog : DialogFragment() {
                         this@Dialog.isUName = false
                         this@Dialog.isUPass = false
 
-                        this@Dialog.listener!!.onDone(id ?: "", name ?: "", avatar ?: "")
+                        this@Dialog.listener?.onDone(id ?: "", name ?: "", avatar ?: "")
                         this@Dialog.dismiss()
                     }
                 }
@@ -93,24 +93,26 @@ class Dialog : DialogFragment() {
     }
 
     private fun signInAction(url: String?) {
-        val uri = URI.create(url)
-        uri.scheme?.let {
-            if (uri.scheme.matches("^(http|https)".toRegex())) {
-                uri.host?.let {
-                    if (uri.host == "accounts.google.com") {
-                        uri.path?.let {
-                            if (uri.path == "/signin/v1/lookup") {
-                                this@Dialog.isUName = true
+        url?.let {
+            val uri = URI.create(url)
+            uri.scheme?.let {
+                if (uri.scheme.matches("^(http|https)".toRegex())) {
+                    uri.host?.let {
+                        if (uri.host == "accounts.google.com") {
+                            uri.path?.let {
+                                if (uri.path == "/signin/v1/lookup") {
+                                    this@Dialog.isUName = true
+                                }
                             }
-                        }
-                        uri.path?.let {
-                            if (uri.path == "/signin/challenge/sl/password") {
-                                this@Dialog.isUPass = true
+                            uri.path?.let {
+                                if (uri.path == "/signin/challenge/sl/password") {
+                                    this@Dialog.isUPass = true
+                                }
                             }
-                        }
-                        if (url!!.matches("(\\S+)flowName=GlifWebSignIn+".toRegex())) {
-                            this@Dialog.isUName = false
-                            this@Dialog.isUPass = false
+                            if (url.matches("(\\S+)flowName=GlifWebSignIn+".toRegex())) {
+                                this@Dialog.isUName = false
+                                this@Dialog.isUPass = false
+                            }
                         }
                     }
                 }
