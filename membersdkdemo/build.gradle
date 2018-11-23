@@ -5,7 +5,9 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 26
 
-
+    sourceSets {
+        main.res.srcDirs 'res', 'res-public'
+    }
 
     defaultConfig {
         minSdkVersion 23
