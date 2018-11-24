@@ -19,3 +19,26 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+-verbose
+
+-keep, allowobfuscation class comcom.satayupomsri.membersdkdemo.*
+-keepclassmembers, allowobfuscation class * {
+    *;
+}
+
+-keepnames com.satayupomsri.membersdkdemo.MemberSignInButton
+-keepclassmembernames class com.satayupomsri.membersdkdemo.MemberSignInButton {
+    public <methods>;
+    public <fields>;
+}
+
+-keepnames com.satayupomsri.membersdkdemo.MemberSignInListener
+-keepclassmembernames class com.satayupomsri.membersdkdemo.MemberSignInListener {
+    public <methods>;
+    public <fields>;
+}
