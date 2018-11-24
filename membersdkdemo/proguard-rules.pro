@@ -35,12 +35,10 @@
 -keepclassmembernames class com.satayupomsri.membersdkdemo.MemberSignInButton {
     public <methods>;
     public <fields>;
-    #!private *; also tried this but it didn't work
 }
 
 -keepnames class com.company.MyClasscom.satayupomsri.membersdkdemo.MemberSignInListener
 -keepclassmembernames class com.satayupomsri.membersdkdemo.MemberSignInListener {
     public <methods>;
     public <fields>;
-    #!private *; also tried this but it didn't work
 }
