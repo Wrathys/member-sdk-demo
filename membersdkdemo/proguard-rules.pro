@@ -24,7 +24,7 @@
 #-keep interface com.satayupomsri.membersdkdemo.MemberSignInListener {*;}
 
 -keep class com.satayupomsri.membersdkdemo.MemberSignInButton {
- init>(android.content.Context);
+ <init>(android.content.Context);
  <init>(android.content.Context, android.util.AttributeSet);
  <init>(android.content.Context, android.util.AttributeSet, int);
  setOnSignInListener(com.satayupomsri.membersdkdemo.MemberSignInListener);
