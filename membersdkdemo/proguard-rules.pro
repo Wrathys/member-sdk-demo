@@ -20,5 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.satayupomsri.membersdkdemo.MemberSignInButton {public *;}
--keep interface com.satayupomsri.membersdkdemoMemberSignInListener {*;}
+-keep class com.satayupomsri.membersdkdemo.MemberSignInButton {public;}
+-keep interface com.satayupomsri.membersdkdemo.MemberSignInListener {*;}
