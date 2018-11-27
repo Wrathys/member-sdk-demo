@@ -2,6 +2,10 @@ package com.satayupomsri.membersdkdemo.utils
 
 import android.content.Context
 import android.content.pm.PackageManager
+import com.satayupomsri.membersdkdemo.protocol.ServerProtocol
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 /**
  * Created by satayupomsri on 23/11/2018 AD.
@@ -16,4 +20,20 @@ internal fun isApplicationInstalled(context: Context, uri: String): Boolean {
     }
 
     return false
+}
+
+internal fun url(context: Context, apiId: Int): String? {
+    var reader: BufferedReader? = null
+    var api: String? = null
+
+    try {
+        reader = BufferedReader(InputStreamReader(context.assets.open("${ServerProtocol.serverProtocolName}.${ServerProtocol.ext}"), "UTF-8"))
+
+        val lines: List<String> = reader.readLines()
+        api = lines[apiId]
+    } catch (e: IOException) {} finally {
+        reader?.close()
+    }
+
+    return api
 }

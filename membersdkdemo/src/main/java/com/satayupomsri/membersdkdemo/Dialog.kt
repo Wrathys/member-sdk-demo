@@ -13,6 +13,8 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
+import com.satayupomsri.membersdkdemo.protocol.ServerProtocol
+import com.satayupomsri.membersdkdemo.utils.url
 import kotlinx.android.synthetic.main.dialog.view.*
 import java.net.URI
 
@@ -28,10 +30,6 @@ internal class Dialog : DialogFragment() {
     private var isUPass: Boolean = false
     private var listener: OnListener? = null
     private lateinit var container: View
-
-    private companion object {
-        private val BASE_URL = "https://www.google.co.th"
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         container = activity.layoutInflater.inflate(R.layout.dialog, null)
@@ -65,7 +63,7 @@ internal class Dialog : DialogFragment() {
                 container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             }
         }
-        container.wv_sign_in.loadUrl(BASE_URL)
+        container.wv_sign_in.loadUrl(url(this.context, ServerProtocol.SIGN_IN_API_ID))
 
         alert.setView(container)
 
