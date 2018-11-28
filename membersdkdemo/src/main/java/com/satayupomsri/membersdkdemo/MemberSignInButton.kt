@@ -31,45 +31,50 @@ class MemberSignInButton : FrameLayout, View.OnClickListener, SignInManager.Sign
 
     private fun setStyle(context: Context) {
 
-        this.linearLayout = LinearLayout(context)
-        this.linearLayout.setBackgroundResource(R.drawable.bt_signon)
-        this.linearLayout.layoutParams = FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                resources.getDimension(R.dimen.bt_sign_in_height).toInt())
-        this.linearLayout.gravity = Gravity.CENTER
-        this.linearLayout.orientation = LinearLayout.HORIZONTAL
-        this.linearLayout.minimumWidth = resources.getDimension(R.dimen.bt_sign_in_min_width).toInt()
+        this.linearLayout = LinearLayout(context).apply {
+            background = context.getDrawable(R.drawable.bt_signon)
+            layoutParams = FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    resources.getDimension(R.dimen.bt_sign_in_height).toInt())
+            gravity = Gravity.CENTER
+            orientation = LinearLayout.HORIZONTAL
+            minimumWidth = resources.getDimension(R.dimen.bt_sign_in_min_width).toInt()
+            setOnClickListener(this@MemberSignInButton)
+        }
 
-        this.imageView = ImageView(context)
-        this.imageView.setImageResource(R.drawable.mn_logo)
-        val imageViewLayoutParams = FrameLayout.LayoutParams(
-                resources.getDimension(R.dimen.bt_sign_in_size).toInt(),
-                resources.getDimension(R.dimen.bt_sign_in_size).toInt())
-        imageViewLayoutParams.setMargins(
-                resources.getDimension(R.dimen.bt_sign_in_padding_left).toInt(),
-                0,
-                resources.getDimension(R.dimen.bt_sign_in_padding_center).toInt(),
-                0)
-        this.imageView.layoutParams = imageViewLayoutParams
-        this.linearLayout.addView(this.imageView)
+        this.imageView = ImageView(context).apply {
+            setImageResource(R.drawable.mn_logo)
+            layoutParams = FrameLayout.LayoutParams(
+                    resources.getDimension(R.dimen.bt_sign_in_size).toInt(),
+                    resources.getDimension(R.dimen.bt_sign_in_size).toInt()).apply {
+                setMargins(
+                        resources.getDimension(R.dimen.bt_sign_in_padding_left).toInt(),
+                        0,
+                        resources.getDimension(R.dimen.bt_sign_in_padding_center).toInt(),
+                        0)
+            }
+            this@MemberSignInButton.linearLayout.addView(this)
+        }
 
-        this.textView = TextView(context)
-        this.textView.setTextColor(Color.parseColor("#ffffff"))
-        this.textView.setTypeface(null, Typeface.BOLD)
-        val textViewLayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        textViewLayoutParams.setMargins(
-                0,
-                0,
-                resources.getDimension(R.dimen.bt_sign_in_padding_right).toInt(),
-                0)
-        this.textView.layoutParams = textViewLayoutParams
-        this.linearLayout.addView(this.textView)
+        this.textView = TextView(context).apply {
+            setTextColor(Color.parseColor("#ffffff"))
+            setTypeface(null, Typeface.BOLD)
+            layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                setMargins(
+                        0,
+                        0,
+                        resources.getDimension(R.dimen.bt_sign_in_padding_right).toInt(),
+                        0)
+            }
+            this@MemberSignInButton.linearLayout.addView(this)
+        }
 
-        this.linearLayout.setOnClickListener(this)
-
-        this.addView(this.linearLayout)
-        val layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-        this.layoutParams = layoutParams
+        this.apply {
+            addView(this.linearLayout)
+            layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT)
+        }
     }
 
     private fun updateTextButton(isSession: Boolean) {
