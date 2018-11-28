@@ -19,3 +19,23 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn com.satayupomsri.membersdkdemo.status.*
+-keepclasseswithmembers class com.satayupomsri.membersdkdemo.status.*
+-keepclassmembers class * extends java.lang.Enum {
+    <fields>;
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-dontwarn com.satayupomsri.membersdkdemo.MemberSignInButton
+-keep class com.satayupomsri.membersdkdemo.MemberSignInButton { *; }
+
+-dontwarn com.satayupomsri.membersdkdemo.MemberSignInListener
+-keep interface com.satayupomsri.membersdkdemo.MemberSignInListener { *; }
+
+-dontwarn com.satayupomsri.membersdkdemo.WebViewOnLoadFinish
+-keep interface com.satayupomsri.membersdkdemo.WebViewOnLoadFinish { *; }
+
+-keep interface com.satayupomsri.membersdkdemo.SignInManager$SignInManagerHandler {*;}
+-keep interface com.satayupomsri.membersdkdemo.Dialog$WebViewOnLoadFinish {*;}

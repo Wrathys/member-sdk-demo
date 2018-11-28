@@ -1,5 +1,7 @@
 package com.satayupomsri.membersdkdemo
 
+import com.satayupomsri.membersdkdemo.status.MemberStatus
+
 /**
  * Created by satayupomsri on 23/11/2018 AD.
  */
@@ -17,10 +19,10 @@ interface MemberSignInListener {
     /**
      * @param status status code response.
      */
-    fun onSignInFail(status: String)
+    fun onSignInFail(status: MemberStatus)
 
     /**
      * @param status status code response.
      */
-    fun onSignOut(status: String)
+    fun onSignOut(status: MemberStatus)
 }

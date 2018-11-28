@@ -4,22 +4,37 @@ package com.satayupomsri.membersdkdemo.utils
  * Created by satayupomsri on 15/11/2018 AD.
  */
 internal data class MemberData(
-        private val id: String,
-        private val name: String,
-        private val avatar: String,
-        private val isSignIn: Boolean) {
+        private val title: String,
+        private val first: String,
+        private val last: String,
+        private val nick: String,
+        private val age: String,
+        private val address: String,
+        private val gender: String,
+        private val phone: String,
+        private val picture: String) {
 
     data class AllDataMember(
-            val id: String,
-            val name: String,
-            val avatar: String,
-            val isSignIn: Boolean)
+            val title: String,
+            val first: String,
+            val last: String,
+            val nick: String,
+            val age: String,
+            val address: String,
+            val gender: String,
+            val phone: String,
+            val picture: String)
 
     fun getMemberData(): AllDataMember {
-        return AllDataMember(id ,name, avatar, isSignIn)
-    }
-
-    fun isSignIn(): Boolean {
-        return isSignIn
+        return AllDataMember(
+                title,
+                first,
+                last,
+                nick,
+                age,
+                address,
+                gender,
+                phone,
+                picture)
     }
 }

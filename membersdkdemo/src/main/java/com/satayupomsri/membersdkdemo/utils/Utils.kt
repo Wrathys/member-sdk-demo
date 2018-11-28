@@ -16,18 +16,17 @@ internal fun isApplicationInstalled(context: Context, uri: String): Boolean {
     try {
         pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES)
         return true
-    } catch (e: PackageManager.NameNotFoundException) {
-    }
+    } catch (e: PackageManager.NameNotFoundException) {}
 
     return false
 }
 
-internal fun url(context: Context, apiId: Int): String? {
+internal fun getKey(context: Context, serverDataName: String, apiId: Int): String {
     var reader: BufferedReader? = null
-    var api: String? = null
+    var api = ""
 
     try {
-        reader = BufferedReader(InputStreamReader(context.assets.open("${ServerProtocol.serverProtocolName}.${ServerProtocol.ext}"), "UTF-8"))
+        reader = BufferedReader(InputStreamReader(context.assets.open("$serverDataName.${ServerProtocol.ext}"), "UTF-8"))
 
         val lines: List<String> = reader.readLines()
         api = lines[apiId]

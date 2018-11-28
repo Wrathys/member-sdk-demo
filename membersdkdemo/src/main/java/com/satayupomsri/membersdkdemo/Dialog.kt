@@ -14,7 +14,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import com.satayupomsri.membersdkdemo.protocol.ServerProtocol
-import com.satayupomsri.membersdkdemo.utils.url
+import com.satayupomsri.membersdkdemo.utils.*
 import kotlinx.android.synthetic.main.dialog.view.*
 import java.net.URI
 
@@ -23,12 +23,7 @@ import java.net.URI
  */
 internal class Dialog : DialogFragment() {
 
-    private var id: String? = null
-    private var name: String? = null
-    private var avatar: String? = null
-    private var isUName: Boolean = false
-    private var isUPass: Boolean = false
-    private var listener: OnListener? = null
+    private var listener: WebViewOnLoadFinish? = null
     private lateinit var container: View
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
@@ -46,24 +41,16 @@ internal class Dialog : DialogFragment() {
         container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, size.y)
 
         container.wv_sign_in.webViewClient = object : WebViewClient() {
-            override fun onLoadResource(view: WebView?, url: String?) {
-                super.onLoadResource(view, url)
-
-                this@Dialog.signInAction(url)
-                this@Dialog.getHash(url)
-                this@Dialog.getAvatar(url)
-
-                this@Dialog.onDone()
-            }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
+                this@Dialog.onSignIn(url)
 
                 //set height follow webview
                 container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             }
         }
-        container.wv_sign_in.loadUrl(url(this.context, ServerProtocol.SIGN_IN_API_ID))
+        container.wv_sign_in.loadUrl(getKey(this@Dialog.context, ServerProtocol.serverProtocolName, ServerProtocol.SIGN_IN_API_ID))
 
         alert.setView(container)
 
@@ -74,42 +61,23 @@ internal class Dialog : DialogFragment() {
         return alertCreate
     }
 
-    private fun onDone() {
-        id?.let {
-            name?.let {
-                avatar?.let {
-                    if (isUName && isUPass) {
-                        this@Dialog.isUName = false
-                        this@Dialog.isUPass = false
-
-                        this@Dialog.listener?.onDone(id ?: "", name ?: "", avatar ?: "")
-                        this@Dialog.dismiss()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun signInAction(url: String?) {
+    private fun onSignIn(url: String?) {
         url?.let {
             val uri = URI.create(url)
             uri.scheme?.let {
                 if (uri.scheme.matches("^(http|https)".toRegex())) {
                     uri.host?.let {
-                        if (uri.host == "accounts.google.com") {
+                        if (uri.host == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_HOST_ID)) {
                             uri.path?.let {
-                                if (uri.path == "/signin/v1/lookup") {
-                                    this@Dialog.isUName = true
+                                if (uri.path == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_PATH_ID)) {
+                                    uri.query?.let {
+                                        val arrData = uri.query.split(getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_SPLIT_DATA_ID))
+                                        if (arrData[0] == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_QUERY_ID)) {
+                                            this@Dialog.listener?.onDone(arrData[1])
+                                            this@Dialog.dismiss()
+                                        }
+                                    }
                                 }
-                            }
-                            uri.path?.let {
-                                if (uri.path == "/signin/challenge/sl/password") {
-                                    this@Dialog.isUPass = true
-                                }
-                            }
-                            if (url.matches("(\\S+)flowName=GlifWebSignIn+".toRegex())) {
-                                this@Dialog.isUName = false
-                                this@Dialog.isUPass = false
                             }
                         }
                     }
@@ -118,47 +86,15 @@ internal class Dialog : DialogFragment() {
         }
     }
 
-    private fun getAvatar(url: String?) {
-        url?.let {
-            if (url.matches("^(http|https)://lh3\\.googleusercontent\\.com/(\\S+)(/photo\\.jpg)\\b".toRegex())) {
-                this@Dialog.avatar = url
-            }
-        }
-    }
-
-    private fun getHash(url: String?) {
-        val uri = URI.create(url)
-        uri.scheme?.let {
-            if (uri.scheme.matches("^(http|https)".toRegex())) {
-                uri.host?.let {
-                    if (uri.host == "lh3.googleusercontent.com") {
-                        uri.path?.let {
-                            val path = uri.path.split("/")
-                            if (!path[1].isEmpty()) {
-                                this@Dialog.id = path[1]
-                            }
-                            if (!path[2].isEmpty() && !path[3].isEmpty()) {
-                                this@Dialog.name = "${path[2]} ${path[3]}"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun show(listener: OnListener, manager: FragmentManager?, tag: String?) {
+    fun show(listener: WebViewOnLoadFinish, manager: FragmentManager?, tag: String?) {
         this@Dialog.listener = listener
         this@Dialog.show(manager, tag)
     }
 
-    interface OnListener {
-
+    interface WebViewOnLoadFinish {
         /**
-         * @param id user id.
-         * @param name user name.
-         * @param avatar user avatar.
+         * @param jwt response.
          */
-        fun onDone(id: String, name: String, avatar: String)
+        fun onDone(jwt: String?)
     }
 }
