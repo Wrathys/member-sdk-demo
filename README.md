@@ -9,7 +9,6 @@ Add it in your root build.gradle at the end of repositories
 ```gradle
 allprojects {
      repositories {
-	  ...
           maven { url 'https://jitpack.io' }
      }
 }
@@ -20,19 +19,89 @@ dependencies {
      implementation 'com.github.Wrathys:member-sdk-demo'
 }
 ```
-Step 3. Add the intent filter for receive data from Member Demo on your application
+
+## Example
+
+### Use default button
+1.  Add Button XML layout in `you_activity.xml`
 ```xml
-<application
-    ...
-    android:theme="@style/AppTheme">
-    ...
-    <intent-filter>
-        <action android:name="android.intent.action.SEND" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <data android:mimeType="@string/type_text" />
-    </intent-filter>
-    ...
+<LinearLayout>
+     <com.satayupomsri.membersdkdemo.MemberSignInButton
+     android:id="@+id/bt_sign_in"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content" />
+</LinearLayout>
 ```
+2. `findViewById` and `setOnSignInListener` for callback response data
+```java
+public class YourActivity extends AppCompatActivity {
+
+    private MemberSignInButton signInButton;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        signInButton = findViewById(R.id.bt_sign_in);
+        signInButton.setOnSignInListener(new MemberSignInListener() {
+            @Override
+            public void onSignInSuccess(String id, String name, String thumbnail) {
+
+            }
+
+            @Override
+            public void onSignInFail(MemberStatus memberStatus) {
+
+            }
+
+            @Override
+            public void onSignOut(MemberStatus memberStatus) {
+
+            }
+        });
+    }
+}
+```
+
+### Custom button
+1. Create your button and set id in `your_activity.xml`
+2. Use `MemberSignInManager`
+3. Add your button by `setCustomButton`
+4. set callback `setOnSignInListener`
+```java
+public class YourActivity extends AppCompatActivity {
+
+    MemberSignInManager signInManager;
+    Button yourButton;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        yourButton = findViewById(R.id.your_button);
+
+        signInManager = new MemberSignInManager(this);
+        signInManager.setCustomButton(yourButton);
+        signInManager.setOnSignInListener(new MemberSignInListener() {
+            @Override
+            public void onSignInSuccess(String id, String name, String thumbnail) {
+
+            }
+
+            @Override
+            public void onSignInFail(MemberStatus memberStatus) {
+
+            }
+
+            @Override
+            public void onSignOut(MemberStatus memberStatus) {
+
+            }
+        });
+    }
+}
+```
+
 ## Author
 
 Satayu, satayu132@gmail.com
