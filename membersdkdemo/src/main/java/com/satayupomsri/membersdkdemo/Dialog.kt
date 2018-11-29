@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DialogFragment
 import android.app.FragmentManager
+import android.graphics.Bitmap
 import android.graphics.Point
 import android.os.Bundle
 import android.view.View
@@ -12,7 +13,7 @@ import android.view.WindowManager
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import com.satayupomsri.membersdkdemo.protocol.ServerProtocol
 import com.satayupomsri.membersdkdemo.utils.*
 import kotlinx.android.synthetic.main.dialog.view.*
@@ -25,6 +26,7 @@ internal class Dialog : DialogFragment() {
 
     private lateinit var container: View
     private var provideDataHandler: ((jwt: String?) -> Unit?)? = null
+    private var isFirstLoaded = true
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         container = activity.layoutInflater.inflate(R.layout.dialog, null)
@@ -39,16 +41,27 @@ internal class Dialog : DialogFragment() {
         display.getSize(size)
 
         //set init height
-        container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, size.y)
+        container.wv_container.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, size.y)
 
         container.wv_sign_in.webViewClient = object : WebViewClient() {
 
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                container.pb_container.visibility = View.VISIBLE
+            }
+
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
+
+                container.pb_container.visibility = View.GONE
                 this@Dialog.onSignIn(url)
 
-                //set height follow webview
-                container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                if(isFirstLoaded) {
+                    isFirstLoaded = false
+                    container.wv_sign_in.visibility = View.VISIBLE
+                    //set height follow web site
+                    container.wv_container.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                }
             }
         }
         container.wv_sign_in.loadUrl(getKey(this@Dialog.context, ServerProtocol.serverProtocolName, ServerProtocol.SIGN_IN_API))
