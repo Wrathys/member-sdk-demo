@@ -5,28 +5,27 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 
 /**
  * Created by satayupomsri on 14/11/2018 AD.
  */
-class MemberSignInButton : FrameLayout, View.OnClickListener, SignInManager.SignInManagerHandler {
+class MemberSignInButton : FrameLayout {
 
     private lateinit var textView: TextView
     private lateinit var imageView: ImageView
     private lateinit var linearLayout: LinearLayout
-    private var signInManager = SignInManager(this.context)
+    private var signInManager = MemberSignInManager(this.context)
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        this.signInManager.setOnSignInManagerHandler(this)
         this.setStyle(this.context)
         this.updateTextButton(this.signInManager.isSignInSession())
+        this.signInManager.setOnSignInManagerHandler { isSession -> this.updateTextButton(isSession) }
     }
 
     private fun setStyle(context: Context) {
@@ -39,7 +38,7 @@ class MemberSignInButton : FrameLayout, View.OnClickListener, SignInManager.Sign
             gravity = Gravity.CENTER
             orientation = LinearLayout.HORIZONTAL
             minimumWidth = resources.getDimension(R.dimen.bt_sign_in_min_width).toInt()
-            setOnClickListener(this@MemberSignInButton)
+            this@MemberSignInButton.signInManager.setCustomButton(this)
         }
 
         this.imageView = ImageView(context).apply {
@@ -84,15 +83,7 @@ class MemberSignInButton : FrameLayout, View.OnClickListener, SignInManager.Sign
             context.getString(R.string.mn_sign_in)
     }
 
-    override fun onClick(v: View) {
-        this.signInManager.onClickListener()
-    }
-
-    override fun onUpdateButton(isSession: Boolean) {
-        this.updateTextButton(isSession)
-    }
-
     fun setOnSignInListener(listener: MemberSignInListener) {
-        this.signInManager.setOnDataUpdate(listener)
+        this.signInManager.setOnSignInListener(listener)
     }
 }

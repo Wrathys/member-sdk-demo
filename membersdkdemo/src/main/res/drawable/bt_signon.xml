@@ -7,7 +7,7 @@
         </shape>
     </item>
 
-    <item android:top="1dp" android:bottom="2dp" android:left="2dp" android:right="2dp">
+    <item android:top="0.5dp" android:bottom="1dp" android:left="1dp" android:right="1dp">
          <!--add android:right="5dp" and android:left="5dp" for border on left and right-->
         <shape android:shape="rectangle">
             <gradient

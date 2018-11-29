@@ -23,11 +23,12 @@ import java.net.URI
  */
 internal class Dialog : DialogFragment() {
 
-    private var listener: WebViewOnLoadFinish? = null
     private lateinit var container: View
+    private var provideDataHandler: ((jwt: String?) -> Unit?)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         container = activity.layoutInflater.inflate(R.layout.dialog, null)
+
         val alert = AlertDialog.Builder(activity)
 
         //clear cookie about data sign in
@@ -50,7 +51,7 @@ internal class Dialog : DialogFragment() {
                 container.wv_container.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             }
         }
-        container.wv_sign_in.loadUrl(getKey(this@Dialog.context, ServerProtocol.serverProtocolName, ServerProtocol.SIGN_IN_API_ID))
+        container.wv_sign_in.loadUrl(getKey(this@Dialog.context, ServerProtocol.serverProtocolName, ServerProtocol.SIGN_IN_API))
 
         alert.setView(container)
 
@@ -67,13 +68,13 @@ internal class Dialog : DialogFragment() {
             uri.scheme?.let {
                 if (uri.scheme.matches("^(http|https)".toRegex())) {
                     uri.host?.let {
-                        if (uri.host == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_HOST_ID)) {
+                        if (uri.host == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_HOST)) {
                             uri.path?.let {
-                                if (uri.path == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_PATH_ID)) {
+                                if (uri.path == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_PATH)) {
                                     uri.query?.let {
-                                        val arrData = uri.query.split(getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_SPLIT_DATA_ID))
-                                        if (arrData[0] == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_QUERY_ID)) {
-                                            this@Dialog.listener?.onDone(arrData[1])
+                                        val arrData = uri.query.split(getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_SPLIT_DATA))
+                                        if (arrData[0] == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_QUERY)) {
+                                            this@Dialog.provideDataHandler?.invoke(arrData[1])
                                             this@Dialog.dismiss()
                                         }
                                     }
@@ -86,15 +87,9 @@ internal class Dialog : DialogFragment() {
         }
     }
 
-    fun show(listener: WebViewOnLoadFinish, manager: FragmentManager?, tag: String?) {
-        this@Dialog.listener = listener
+    fun show(manager: FragmentManager?, tag: String?, handler: (jwt: String?) -> Unit) {
+        this@Dialog.provideDataHandler = handler
         this@Dialog.show(manager, tag)
     }
 
-    interface WebViewOnLoadFinish {
-        /**
-         * @param jwt response.
-         */
-        fun onDone(jwt: String?)
-    }
 }

@@ -9,12 +9,12 @@ import com.satayupomsri.membersdkdemo.protocol.ServerProtocol
  */
 internal class Prefs (context: Context) {
 
-    private val prefName = getKey(context, ServerProtocol.prefName, ServerProtocol.PREF_NAME_ID)
-    private val prefField = getKey(context, ServerProtocol.prefName, ServerProtocol.PREF_FIELD_ID)
+    private val prefName = getKey(context, ServerProtocol.prefName, ServerProtocol.PREF_NAME)
+    private val prefField = getKey(context, ServerProtocol.prefName, ServerProtocol.PREF_FIELD)
 
     private val prefs: SharedPreferences = context.getSharedPreferences(prefName, 0)
 
-    var jwt: String?
+    var storeJwt: String?
         get() = prefs.getString(prefField, null)
         set(jwt) {
             if(jwt == null)

@@ -2,3 +2,8 @@
 /member/login.php
 success
 =
+id
+fullname
+token
+thumbnail
+data
