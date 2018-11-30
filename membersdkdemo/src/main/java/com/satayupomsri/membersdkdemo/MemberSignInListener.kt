@@ -1,6 +1,7 @@
 package com.satayupomsri.membersdkdemo
 
 import com.satayupomsri.membersdkdemo.status.MemberStatus
+import org.json.JSONObject
 
 /**
  * Created by satayupomsri on 23/11/2018 AD.
@@ -11,18 +12,16 @@ import com.satayupomsri.membersdkdemo.status.MemberStatus
 interface MemberSignInListener {
 
     /**
-     * @param id user id.
-     * @param name user name.
+     * @param json data from sign in
      */
-    fun onSignInSuccess(id: String, name: String, avatar: String)
+    fun onSignInSuccess(json: JSONObject)
 
     /**
      * @param status status code response.
      */
     fun onSignInFail(status: MemberStatus)
 
-    /**
-     * @param status status code response.
-     */
-    fun onSignOut(status: MemberStatus)
+    fun onSignOutSuccess()
+
+    fun onSignOutFail()
 }

@@ -45,19 +45,19 @@ public class YourActivity extends AppCompatActivity {
         signInButton = findViewById(R.id.bt_sign_in);
         signInButton.setOnSignInListener(new MemberSignInListener() {
             @Override
-            public void onSignInSuccess(String id, String name, String thumbnail) {
-
-            }
-
-            @Override
-            public void onSignInFail(MemberStatus memberStatus) {
-
-            }
-
-            @Override
-            public void onSignOut(MemberStatus memberStatus) {
-
-            }
+                public void onSignInSuccess(String id, String name, String thumbnail) {
+    
+                }
+    
+                @Override
+                public void onSignInFail(MemberStatus memberStatus) {
+    
+                }
+    
+                @Override
+                public void onSignOut(MemberStatus memberStatus) {
+    
+                }
         });
     }
 }

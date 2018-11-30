@@ -10,11 +10,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.webkit.CookieManager
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.RelativeLayout
 import com.satayupomsri.membersdkdemo.protocol.ServerProtocol
+import com.satayupomsri.membersdkdemo.status.MemberStatus
 import com.satayupomsri.membersdkdemo.utils.*
 import kotlinx.android.synthetic.main.dialog.view.*
 import java.net.URI
@@ -25,7 +24,8 @@ import java.net.URI
 internal class Dialog : DialogFragment() {
 
     private lateinit var container: View
-    private var provideDataHandler: ((jwt: String?) -> Unit?)? = null
+    private var provideDataHandlerSuccess: ((jwt: String?) -> Unit?)? = null
+    private var provideDataHandlerFail: ((status: MemberStatus) -> Unit?)? = null
     private var isFirstLoaded = true
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
@@ -63,8 +63,13 @@ internal class Dialog : DialogFragment() {
                     container.wv_container.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 }
             }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                super.onReceivedError(view, request, error)
+                this@Dialog.onSignInFail(MemberStatus.LOAD_PAGE_SIGN_IN_FAIL)
+            }
         }
-        container.wv_sign_in.loadUrl(getKey(this@Dialog.context, ServerProtocol.serverProtocolName, ServerProtocol.SIGN_IN_API))
+        container.wv_sign_in.loadUrl(getKey(this.context, ServerProtocol.serverProtocolName, ServerProtocol.SIGN_IN_API))
 
         alert.setView(container)
 
@@ -75,20 +80,35 @@ internal class Dialog : DialogFragment() {
         return alertCreate
     }
 
+    fun show(manager: FragmentManager?, tag: String?, handlerSuccess: (jwt: String?) -> Unit, handlerFail: (status: MemberStatus) -> Unit) {
+        this.isFirstLoaded = true
+        this.provideDataHandlerSuccess = handlerSuccess
+        this.provideDataHandlerFail = handlerFail
+
+        this.show(manager, tag)
+    }
+
     private fun onSignIn(url: String?) {
         url?.let {
             val uri = URI.create(url)
             uri.scheme?.let {
                 if (uri.scheme.matches("^(http|https)".toRegex())) {
                     uri.host?.let {
-                        if (uri.host == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_HOST)) {
+                        if (uri.host == getKey(this.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_HOST)) {
                             uri.path?.let {
-                                if (uri.path == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_PATH)) {
+                                if (uri.path == getKey(this.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_PATH)) {
                                     uri.query?.let {
-                                        val arrData = uri.query.split(getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_SPLIT_DATA))
-                                        if (arrData[0] == getKey(this@Dialog.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_QUERY)) {
-                                            this@Dialog.provideDataHandler?.invoke(arrData[1])
-                                            this@Dialog.dismiss()
+                                        val arrData = uri.query.split(getKey(this.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_SPLIT_DATA))
+                                        if (arrData[0] == getKey(this.context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_VALIDATE_QUERY)) {
+                                            if(arrData.size < 2) {
+                                                this.onSignInFail(MemberStatus.SIGN_IN_RESPONSE_EMPTY)
+                                            } else {
+                                                if(arrData[1].isEmpty()){
+                                                    this.onSignInFail(MemberStatus.SIGN_IN_RESPONSE_EMPTY)
+                                                } else {
+                                                    this.onSignInSuccess(arrData[1])
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -100,9 +120,13 @@ internal class Dialog : DialogFragment() {
         }
     }
 
-    fun show(manager: FragmentManager?, tag: String?, handler: (jwt: String?) -> Unit) {
-        this@Dialog.provideDataHandler = handler
-        this@Dialog.show(manager, tag)
+    private fun onSignInSuccess(jwt: String?) {
+        this.provideDataHandlerSuccess?.invoke(jwt)
+        this.dismiss()
     }
 
+    private fun onSignInFail(status: MemberStatus) {
+        this.provideDataHandlerFail?.invoke(status)
+        this.dismiss()
+    }
 }

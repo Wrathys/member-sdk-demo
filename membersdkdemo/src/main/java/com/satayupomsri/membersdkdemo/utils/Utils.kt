@@ -2,6 +2,7 @@ package com.satayupomsri.membersdkdemo.utils
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import com.satayupomsri.membersdkdemo.protocol.ServerProtocol
 import java.io.BufferedReader
 import java.io.IOException
@@ -35,4 +36,9 @@ internal fun getKey(context: Context, serverDataName: String, apiId: Int): Strin
     }
 
     return api
+}
+
+internal fun isNetworkConnected(context: Context): Boolean {
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    return cm.activeNetworkInfo != null
 }

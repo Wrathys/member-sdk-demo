@@ -40,10 +40,10 @@ internal class Jwt(context: Context) {
                     val thumb = if(data.isNull(THUMBNAIL_KEY)) "" else data[THUMBNAIL_KEY]
 
                     return MemberData(
-                            id.toString(),
-                            fullname.toString(),
-                            token.toString(),
-                            thumb.toString()
+                            id,
+                            fullname,
+                            token,
+                            thumb
                     )
                 }
             }

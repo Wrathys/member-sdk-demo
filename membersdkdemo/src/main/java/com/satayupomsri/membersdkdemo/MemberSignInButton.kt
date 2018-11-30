@@ -31,7 +31,8 @@ class MemberSignInButton : FrameLayout {
     private fun setStyle(context: Context) {
 
         this.linearLayout = LinearLayout(context).apply {
-            background = context.getDrawable(R.drawable.bt_signon)
+            isClickable = true
+            background = context.getDrawable(R.drawable.bt_sigin)
             layoutParams = FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     resources.getDimension(R.dimen.bt_sign_in_height).toInt())
