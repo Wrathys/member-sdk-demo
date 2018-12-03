@@ -34,5 +34,5 @@
 -dontwarn com.satayupomsri.membersdkdemo.MemberSignInListener
 -keep interface com.satayupomsri.membersdkdemo.MemberSignInListener { *; }
 
--dontwarn com.satayupomsri.membersdkdemo.MemberSignInManager
--keep class com.satayupomsri.membersdkdemo.MemberSignInManager { *; }
+-dontwarn com.satayupomsri.membersdkdemo.MemberSignInClient
+-keep class com.satayupomsri.membersdkdemo.MemberSignInClient { *; }

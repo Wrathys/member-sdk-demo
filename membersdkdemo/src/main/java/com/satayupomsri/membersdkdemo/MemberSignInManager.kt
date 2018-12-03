@@ -1,6 +1,5 @@
 package com.satayupomsri.membersdkdemo
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -17,7 +16,7 @@ import org.json.JSONObject
 /**
  * Created by satayupomsri on 28/11/2018 AD.
  */
-class MemberSignInManager(private var context: Context) {
+internal class MemberSignInManager(private var context: Context) : BroadcastReceiver() {
 
     private var updateButtonHandler: ((isSession: Boolean) -> Unit?)? = null
     private var onSignInListener: MemberSignInListener? = null
@@ -27,7 +26,7 @@ class MemberSignInManager(private var context: Context) {
     }
 
     init {
-        context.registerReceiver(NetworkStateReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        context.registerReceiver(this, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
     }
 
     private fun signInWithSdk() {
@@ -43,7 +42,7 @@ class MemberSignInManager(private var context: Context) {
         this.onSignOutListener()
     }
 
-    internal fun isSignInSession(): Boolean {
+    fun isSignInSession(): Boolean {
         return this.prefs.storeJwt != null
     }
 
@@ -51,7 +50,7 @@ class MemberSignInManager(private var context: Context) {
      * cannot sign in without internet
      * but can be sign out
      */
-    private fun signInSignOut() {
+    fun signInSignOut() {
         when {
             isSignInSession() -> this.signOut()
             isNetworkConnected(context) -> this.signInWithSdk()
@@ -59,7 +58,7 @@ class MemberSignInManager(private var context: Context) {
         }
     }
 
-    internal fun setOnSignInManagerHandler(handler: (isSession: Boolean) -> Unit) {
+    fun setOnSignInManagerHandler(handler: (isSession: Boolean) -> Unit) {
         this.updateButtonHandler = handler
     }
 
@@ -100,22 +99,19 @@ class MemberSignInManager(private var context: Context) {
         this.onSignInListenerFail(MemberStatus.SIGN_IN_RESPONSE_EMPTY)
     }
 
-    inner class NetworkStateReceiver : BroadcastReceiver() {
-        @SuppressLint("UnsafeProtectedBroadcastReceiver")
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.extras != null) {
-                val connectivityManager: ConnectivityManager? = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                val ni = connectivityManager?.activeNetworkInfo
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (intent?.extras != null) {
+            val connectivityManager: ConnectivityManager? = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val ni = connectivityManager?.activeNetworkInfo
 
-                if (ni != null && ni.isConnectedOrConnecting) {
-                    //connected
-                } else if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
-                    this@MemberSignInManager.apply {
-                        this.dialogSignIn.dialog.also {
-                            if (it != null && it.isShowing) {
-                                this.dialogSignIn.dismiss()
-                                this.onSignInListener?.onSignInFail(MemberStatus.NO_INTERNET_CONNECTION)
-                            }
+            if (ni != null && ni.isConnectedOrConnecting) {
+                //connected
+            } else if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
+                this@MemberSignInManager.apply {
+                    this.dialogSignIn.dialog.also {
+                        if (it != null && it.isShowing) {
+                            this.dialogSignIn.dismiss()
+                            this.onSignInListener?.onSignInFail(MemberStatus.NO_INTERNET_CONNECTION)
                         }
                     }
                 }
