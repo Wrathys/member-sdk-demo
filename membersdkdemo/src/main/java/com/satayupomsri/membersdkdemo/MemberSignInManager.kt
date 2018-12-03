@@ -47,15 +47,15 @@ class MemberSignInManager(private var context: Context) {
         return this.prefs.storeJwt != null
     }
 
+    /**
+     * cannot sign in without internet
+     * but can be sign out
+     */
     private fun signInSignOut() {
-        if(isNetworkConnected(context)) {
-            if (isSignInSession()) {
-                this.signOut()
-            } else {
-                this.signInWithSdk()
-            }
-        } else {
-            this.onSignInListener?.onSignInFail(MemberStatus.NO_INTERNET_CONNECTION)
+        when {
+            isSignInSession() -> this.signOut()
+            isNetworkConnected(context) -> this.signInWithSdk()
+            else -> this.onSignInListener?.onSignInFail(MemberStatus.NO_INTERNET_CONNECTION)
         }
     }
 
@@ -82,13 +82,13 @@ class MemberSignInManager(private var context: Context) {
     private fun onSignOutListener() {
         this.onSignInListener?.onSignOutSuccess()
 
-            this.prefs.storeJwt = null
-            this.updateButtonHandler?.invoke(false)
+        this.prefs.storeJwt = null
+        this.updateButtonHandler?.invoke(false)
     }
 
     private fun onSignInDone(jwt: String?) {
         jwt?.let {
-            val decode = Jwt(context).decoded(jwt)
+            val decode = Jwt().decoded(jwt)
             decode?.let {
                 this.prefs.storeJwt = jwt
                 this.updateButtonHandler?.invoke(true)
@@ -111,9 +111,11 @@ class MemberSignInManager(private var context: Context) {
                     //connected
                 } else if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
                     this@MemberSignInManager.apply {
-                        if(this.dialogSignIn.fragmentManager != null) {
-                            this.dialogSignIn.dismiss()
-                            this.onSignInListener?.onSignInFail(MemberStatus.NO_INTERNET_CONNECTION)
+                        this.dialogSignIn.dialog.also {
+                            if (it != null && it.isShowing) {
+                                this.dialogSignIn.dismiss()
+                                this.onSignInListener?.onSignInFail(MemberStatus.NO_INTERNET_CONNECTION)
+                            }
                         }
                     }
                 }

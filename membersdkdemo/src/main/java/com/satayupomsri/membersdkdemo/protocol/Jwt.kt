@@ -12,13 +12,15 @@ import java.nio.charset.Charset
 /**
  * Created by satayupomsri on 27/11/2018 AD.
  */
-internal class Jwt(context: Context) {
+internal class Jwt {
 
-    private var ID_KEY = getKey(context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_KEY_ID)
-    private var FULL_NAME_KEY = getKey(context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_KEY_NAME)
-    private var TOKEN_KEY = getKey(context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_KEY_TOKEN)
-    private var THUMBNAIL_KEY = getKey(context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_KEY_THUMBNAIL)
-    private var DATA_KEY = getKey(context, ServerProtocol.validateSignInName, ServerProtocol.SIGN_IN_KEY_DATA_OBJECT)
+    private companion object {
+        private var ID_KEY = "id"
+        private var FULL_NAME_KEY = "fullname"
+        private var TOKEN_KEY = "token"
+        private var THUMBNAIL_KEY = "thumbnail"
+        private var DATA_KEY = "data"
+    }
 
     fun decoded(jwtEncoded: String): MemberData? {
         try {
