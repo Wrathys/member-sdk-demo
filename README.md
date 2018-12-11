@@ -45,19 +45,24 @@ public class YourActivity extends AppCompatActivity {
         signInButton = findViewById(R.id.bt_sign_in);
         signInButton.setOnSignInListener(new MemberSignInListener() {
             @Override
-                public void onSignInSuccess(String id, String name, String thumbnail) {
+            public void onSignInSuccess(JSONObject json) {
     
-                }
+            }
     
-                @Override
-                public void onSignInFail(MemberStatus memberStatus) {
+            @Override
+            public void onSignInFail(MemberStatus memberStatus) {
     
-                }
+            }
     
-                @Override
-                public void onSignOut(MemberStatus memberStatus) {
-    
-                }
+            @Override
+            public void onSignOutSuccess() {
+                
+            }
+                
+            @Override
+            public void onSignOutFail() {
+                
+            }
         });
     }
 }
@@ -65,13 +70,13 @@ public class YourActivity extends AppCompatActivity {
 
 ### Custom button
 1. Create your button and set id in `your_activity.xml`
-2. Use `MemberSignInManager`
+2. Use `MemberSignInClient`
 3. Add your button by `setCustomButton`
 4. set callback `setOnSignInListener`
 ```java
 public class YourActivity extends AppCompatActivity {
 
-    MemberSignInManager signInManager;
+    MemberSignInClient signInClient;
     Button yourButton;
 
     @Override
@@ -80,22 +85,27 @@ public class YourActivity extends AppCompatActivity {
 
         yourButton = findViewById(R.id.your_button);
 
-        signInManager = new MemberSignInManager(this);
-        signInManager.setCustomButton(yourButton);
-        signInManager.setOnSignInListener(new MemberSignInListener() {
+        signInClient = new MemberSignInClient(this);
+        signInClient.setCustomButton(yourButton);
+        signInClient.setOnSignInListener(new MemberSignInListener() {
             @Override
-            public void onSignInSuccess(String id, String name, String thumbnail) {
-
+            public void onSignInSuccess(JSONObject json) {
+    
             }
-
+    
             @Override
             public void onSignInFail(MemberStatus memberStatus) {
-
+    
             }
-
+    
             @Override
-            public void onSignOut(MemberStatus memberStatus) {
-
+            public void onSignOutSuccess() {
+                
+            }
+                
+            @Override
+            public void onSignOutFail() {
+                
             }
         });
     }
